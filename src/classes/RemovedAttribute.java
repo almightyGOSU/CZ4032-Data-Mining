@@ -2,6 +2,8 @@ package classes;
 
 import java.util.HashMap;
 
+import util.Const;
+
 public class RemovedAttribute implements Comparable<RemovedAttribute> {
 
 	private String _attrName = null;
@@ -17,6 +19,10 @@ public class RemovedAttribute implements Comparable<RemovedAttribute> {
 	
 	public String getAttributeName() {
 		return _attrName;
+	}
+	
+	public void setAttributeName(String attrName) {
+		_attrName = attrName;
 	}
 	
 	public void addAccuracy(String technique, double accuracy) {
@@ -48,7 +54,10 @@ public class RemovedAttribute implements Comparable<RemovedAttribute> {
 			
 			double gainLoss = selfAccuracy - baselineAccuracy;
 			
-			_accuracyGainLoss += (weights[currAttr++] * gainLoss);
+			if(weights != null)
+				_accuracyGainLoss += (weights[currAttr++] * gainLoss);
+			else
+				_accuracyGainLoss += gainLoss;
 		}
 	}
 	
@@ -58,7 +67,7 @@ public class RemovedAttribute implements Comparable<RemovedAttribute> {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append(String.format("%-18s", _attrName)).append(" | ");
-		for(String key : _accuracies.keySet()) {
+		for(String key : Const.MODELS) {
 			
 			sb.append(String.format("%-13s",
 					String.format("%5.3f %%", _accuracies.get(key))));

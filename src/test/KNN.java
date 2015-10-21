@@ -33,6 +33,7 @@ public class KNN {
 		
 		//System.out.println(data.toSummaryString());
 		//do not use first and second
+		@SuppressWarnings("unused")
 		Instance first = data.instance(3);
 		Instance second = data.instance(1);
 		

@@ -1,4 +1,4 @@
-package weka.attributeEvaluation;
+package weka.attrEval;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.NaiveBayes;
@@ -27,6 +27,8 @@ public class ClassificationModels {
 	private ClassificationModels() {
 		
 		_naiveBayes = new NaiveBayes();
+		/*_naiveBayes.setUseSupervisedDiscretization(true);*/
+		
 		_decisionTree = new J48();
 		_randomForest = new RandomForest();
 		
@@ -70,7 +72,6 @@ public class ClassificationModels {
 	public static ClassificationModels getInstance() {
 		
 		if(_instance == null) {
-			
 			_instance = new ClassificationModels();
 		}
 		

@@ -8,7 +8,12 @@ public class Const {
 			"data\\student_math_grade.arff";
 	
 	public static final String RESULTS_FILENAME =
-			"data\\student_math_classificationResults.txt";
+			"data\\student_math_attrEvalResults.txt";
+	
+	public static final String GOOD_BAD_ATTR_FILENAME =
+			"data\\student_math_goodBadAttr.txt";
+	
+	public static final int TOP_N = 5;
 	
 	public static final int CROSS_VALIDATION_FOLDS = 10;
 	

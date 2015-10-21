@@ -1,5 +1,5 @@
 package test;
-import weka.attributeEvaluation.*;
+
 import weka.attributeSelection.AttributeSelection;
 import weka.attributeSelection.CfsSubsetEval;
 import weka.attributeSelection.GreedyStepwise;

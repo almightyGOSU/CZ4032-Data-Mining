@@ -1,107 +1,19 @@
-package weka.attributeEvaluation;
+package util;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 
-import classes.RemovedAttribute;
-import util.Const;
-import util.FileIOHelper;
+import weka.attrEval.ClassificationModels;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.evaluation.NominalPrediction;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Remove;
+import classes.RemovedAttribute;
 
-public class WekaAttributeEvaluator {
-	
-	private static RemovedAttribute _binaryBaseline = null;
-	private static ArrayList<RemovedAttribute> _binaryAttrList = null;
-	
-	private static RemovedAttribute _gradeBaseline = null;
-	private static ArrayList<RemovedAttribute> _gradeAttrList = null;
-	
-	private static StringBuilder _sb = new StringBuilder();
+public class WekaHelper {
 
-	public static void main(String[] args) {
-		
-		BufferedReader binaryDataFile = FileIOHelper
-				.readDataFile(Const.MATH_BINARY_FILENAME);
-		Instances binaryDataInstances = null;
-		try {
-			binaryDataInstances = new Instances(binaryDataFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		if (binaryDataInstances != null) {
-			
-			System.out.println(
-					"Calculating baseline accuracies for binary data....");
-			_binaryBaseline = calcBaseline(binaryDataInstances);
-			int[] weights = rankTechniques(_binaryBaseline);
-			printLine("Weights for binary data: "
-					+ Arrays.toString(weights) + "\n");
-			
-			_binaryAttrList = new ArrayList<>();
-			removeAttrAndCalc(binaryDataInstances, _binaryAttrList);
-			
-			printLine(getColumnHeaders());
-			printLine(_binaryBaseline.toString());
-			
-			// Calculate accuracy gain/loss
-			for(RemovedAttribute ra : _binaryAttrList) {
-				ra.calcAccuracyGainLoss(_binaryBaseline, weights);
-			}
-			
-			Collections.sort(_binaryAttrList);
-			for(RemovedAttribute ra : _binaryAttrList) {
-				printLine(ra.toString());
-			}
-		}
-		
-		BufferedReader gradeDataFile = FileIOHelper
-				.readDataFile(Const.MATH_GRADE_FILENAME);
-		Instances gradeDataInstances = null;
-		try {
-			gradeDataInstances = new Instances(gradeDataFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		if (gradeDataInstances != null) {
-			
-			System.out.println(
-					"\n\nCalculating baseline accuracies for grade data....");
-			_gradeBaseline = calcBaseline(gradeDataInstances);
-			int[] weights = rankTechniques(_gradeBaseline);
-			printLine("Weights for grade data: "
-					+ Arrays.toString(weights) + "\n");
-			
-			_gradeAttrList = new ArrayList<>();
-			removeAttrAndCalc(gradeDataInstances, _gradeAttrList);
-			
-			printLine(getColumnHeaders());
-			printLine(_gradeBaseline.toString());
-			
-			// Calculate accuracy gain/loss
-			for(RemovedAttribute ra : _gradeAttrList) {
-				ra.calcAccuracyGainLoss(_gradeBaseline, weights);
-			}
-			
-			Collections.sort(_gradeAttrList);
-			for(RemovedAttribute ra : _gradeAttrList) {
-				printLine(ra.toString());
-			}
-		}
-		
-		FileIOHelper.saveToFile(_sb.toString(), Const.RESULTS_FILENAME, false);
-	}
-	
 	private static Evaluation classify(Classifier model, Instances trainingSet,
 			Instances testingSet) {
 
@@ -155,7 +67,7 @@ public class WekaAttributeEvaluator {
 		return split;
 	}
 	
-	private static RemovedAttribute calcBaseline(Instances dataInstances) {
+	public static RemovedAttribute calcAccuracy(Instances dataInstances) {
 
 		RemovedAttribute attr = new RemovedAttribute("None");
 		
@@ -167,7 +79,7 @@ public class WekaAttributeEvaluator {
 		return attr;
 	}
 	
-	private static void removeAttrAndCalc(Instances dataInstances,
+	public static void removeAttrAndCalc(Instances dataInstances,
 			ArrayList<RemovedAttribute> attrList) {
 		
 		int numAttributes = dataInstances.numAttributes();
@@ -236,7 +148,7 @@ public class WekaAttributeEvaluator {
 		}
 	}
 	
-	private static int[] rankTechniques(RemovedAttribute baseline) {
+	public static int[] rankTechniques(RemovedAttribute baseline) {
 		
 		HashMap<String, Double> baselineAccuracies = baseline.getAccuracies();
 		
@@ -264,7 +176,7 @@ public class WekaAttributeEvaluator {
 		return ranks;
 	}
 	
-	private static String getColumnHeaders() {
+	public static String getColumnHeaders() {
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -279,9 +191,9 @@ public class WekaAttributeEvaluator {
 		return sb.toString();
 	}
 	
-	private static void printLine(String contents) {
+	public static void printLine(StringBuilder sb, String contents) {
 		
-		_sb.append(contents).append("\n");
+		sb.append(contents).append("\n");
 		System.out.println(contents);
 	}
 }

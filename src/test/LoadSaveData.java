@@ -1,6 +1,4 @@
 package test;
-import java.io.BufferedReader;
-import java.io.FileReader;
 
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;

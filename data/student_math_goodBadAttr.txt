@@ -1,0 +1,4 @@
+famsize,sex,Dalc,activities,absences
+G2,G1,goout,romantic,address
+address,guardian,Medu,traveltime,Fedu
+G2,G1,Pstatus,romantic,famrel
