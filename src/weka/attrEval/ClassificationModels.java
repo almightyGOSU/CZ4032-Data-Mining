@@ -3,10 +3,12 @@ package weka.attrEval;
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.functions.MultilayerPerceptron;
+import weka.classifiers.functions.RBFClassifier;
 import weka.classifiers.functions.SMO;
 import weka.classifiers.lazy.IBk;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
+import weka.core.SelectedTag;
 
 public class ClassificationModels {
 
@@ -19,15 +21,12 @@ public class ClassificationModels {
 	private RandomForest _randomForest = null;
 	private MultilayerPerceptron _neuralNetwork = null;
 	private SMO _svm = null;
-	private IBk _7NN = null;
-	private IBk _9NN = null;
-	private IBk _11NN = null;
-	private IBk _13NN = null;
+	private IBk _kNN = null;
 	
 	private ClassificationModels() {
 		
 		_naiveBayes = new NaiveBayes();
-		/*_naiveBayes.setUseSupervisedDiscretization(true);*/
+		_naiveBayes.setUseSupervisedDiscretization(true);
 		
 		_decisionTree = new J48();
 		_randomForest = new RandomForest();
@@ -40,21 +39,15 @@ public class ClassificationModels {
 		 */
 		_neuralNetwork = new MultilayerPerceptron();
 		_neuralNetwork.setHiddenLayers("5");
-		_neuralNetwork.setLearningRate(0.05);
+		_neuralNetwork.setLearningRate(0.09);
 		
 		_svm = new SMO();
 		
-		_7NN = new IBk();
-		_7NN.setKNN(7);
-		
-		_9NN = new IBk();
-		_9NN.setKNN(9);
-		
-		_11NN = new IBk();
-		_11NN.setKNN(11);
-		
-		_13NN = new IBk();
-		_13NN.setKNN(13);
+		// Using k-NN with k-value of 9, and weight neighbours using 1/distance
+		_kNN = new IBk();
+		_kNN.setKNN(9);
+		_kNN.setDistanceWeighting(
+				new SelectedTag(IBk.WEIGHT_INVERSE, IBk.TAGS_WEIGHTING));
 		
 		_models = new Classifier[] {
 				_naiveBayes,
@@ -62,10 +55,7 @@ public class ClassificationModels {
 				_randomForest,
 				_neuralNetwork,
 				_svm,
-				_7NN,
-				_9NN,
-				_11NN,
-				_13NN
+				_kNN
 		};
 	}
 	

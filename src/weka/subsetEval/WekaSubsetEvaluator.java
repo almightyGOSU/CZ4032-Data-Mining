@@ -20,6 +20,8 @@ public class WekaSubsetEvaluator {
 	
 	private static String[] _gradeLSA = null;
 	private static String[] _gradeMSA = null;
+	
+	private static String[][] _subsetsAttr = null;
 
 	public static void main(String[] args) {
 	
@@ -32,6 +34,18 @@ public class WekaSubsetEvaluator {
 			
 			_gradeLSA = goodBadAttrFile.readLine().split(",");
 			_gradeMSA = goodBadAttrFile.readLine().split(",");
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		BufferedReader subsetsFile =
+				FileIOHelper.readDataFile(Const.SUBSETS_FILENAME);
+		try {
+			_subsetsAttr = new String[Const.NUM_SUBSETS][];
+			for(int i = 0; i < Const.NUM_SUBSETS; i++) {
+				_subsetsAttr[i] = subsetsFile.readLine().split(",");
+			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -78,6 +92,26 @@ public class WekaSubsetEvaluator {
 			binaryWithoutMSA.setAttributeName("Binary Top 5 MSA");
 			binaryWithoutMSA.calcAccuracyGainLoss(binaryBaseline, null);
 			System.out.println(binaryWithoutMSA.toString());
+			
+			// Iterate through the different subsets
+			for(int i = 0; i < Const.NUM_SUBSETS; i++) {
+				
+				// Keep only attributes specified in subset
+				String attrIndicesToKeep = findAttributeIndices(
+						binaryDataInstances,
+						WekaHelper.concat(
+								_subsetsAttr[i],
+								new String[]{"BinaryData"}));
+				
+				filteredBinaryData = keepSpecifiedAttr(
+						binaryDataInstances, attrIndicesToKeep);
+				
+				RemovedAttribute subset =
+						WekaHelper.calcAccuracy(filteredBinaryData);
+				subset.setAttributeName("Binary !(Subset " + (i+1) + ")");
+				subset.calcAccuracyGainLoss(binaryBaseline, null);
+				System.out.println(subset.toString());
+			}
 		}
 		
 		BufferedReader gradeDataFile = 
@@ -121,6 +155,26 @@ public class WekaSubsetEvaluator {
 			gradeWithoutMSA.setAttributeName("Grade Top 5 MSA");
 			gradeWithoutMSA.calcAccuracyGainLoss(gradeBaseline, null);
 			System.out.println(gradeWithoutMSA.toString());
+			
+			// Iterate through the different subsets
+			for(int i = 0; i < Const.NUM_SUBSETS; i++) {
+				
+				// Keep only attributes specified in subset
+				String attrIndicesToKeep = findAttributeIndices(
+						gradeDataInstances,
+						WekaHelper.concat(
+								_subsetsAttr[i],
+								new String[]{"Grade"}));
+				
+				filteredGradeData = keepSpecifiedAttr(
+						gradeDataInstances, attrIndicesToKeep);
+				
+				RemovedAttribute subset =
+						WekaHelper.calcAccuracy(filteredGradeData);
+				subset.setAttributeName("Grade !(Subset " + (i+1) + ")");
+				subset.calcAccuracyGainLoss(gradeBaseline, null);
+				System.out.println(subset.toString());
+			}
 		}
 	}
 
@@ -147,15 +201,34 @@ public class WekaSubsetEvaluator {
 		// Filter data to get rid of unwanted columns
 		Remove removeAttrFilter = new Remove();
 		removeAttrFilter.setAttributeIndices(removeLst);
-		Instances filteredBinaryData = null;
+		Instances filteredData = null;
 		try {
 			removeAttrFilter.setInputFormat(dataInstances);
-			filteredBinaryData = Filter.useFilter(dataInstances,
+			filteredData = Filter.useFilter(dataInstances,
 					removeAttrFilter);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return filteredBinaryData;
+		return filteredData;
+	}
+	
+	private static Instances keepSpecifiedAttr(
+			Instances dataInstances, String retainLst) {
+		
+		// Filter data to get rid of unwanted columns
+		Remove keepAttrFilter = new Remove();
+		keepAttrFilter.setAttributeIndices(retainLst);
+		keepAttrFilter.setInvertSelection(true);
+		Instances filteredData = null;
+		try {
+			keepAttrFilter.setInputFormat(dataInstances);
+			filteredData = Filter.useFilter(dataInstances,
+					keepAttrFilter);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return filteredData;
 	}
 }

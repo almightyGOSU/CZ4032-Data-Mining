@@ -13,6 +13,10 @@ public class Const {
 	public static final String GOOD_BAD_ATTR_FILENAME =
 			"data\\student_math_goodBadAttr.txt";
 	
+	public static final String SUBSETS_FILENAME =
+			"data\\subsets.txt";
+	public static final int NUM_SUBSETS = 5;
+	
 	public static final int TOP_N = 5;
 	
 	public static final int CROSS_VALIDATION_FOLDS = 10;
@@ -23,9 +27,6 @@ public class Const {
 		"Random Forest",
 		"NN (MLP)",
 		"SVM",
-		"k-NN (k = 7)",
-		"k-NN (k = 9)",
-		"k-NN (k = 11)",
-		"k-NN (k = 13)"
+		"k-NN (k = 9)"
 	};
 }

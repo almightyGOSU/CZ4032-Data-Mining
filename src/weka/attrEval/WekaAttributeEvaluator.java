@@ -99,7 +99,7 @@ public class WekaAttributeEvaluator {
 					"\n\nCalculating baseline accuracies for grade data....");
 			_gradeBaseline = WekaHelper.calcAccuracy(gradeDataInstances);
 			int[] weights = WekaHelper.rankTechniques(_gradeBaseline);
-			WekaHelper.printLine(_sbAttrEval, "Weights for grade data: "
+			WekaHelper.printLine(_sbAttrEval, "\n\nWeights for grade data: "
 					+ Arrays.toString(weights) + "\n");
 			
 			_gradeAttrList = new ArrayList<>();
