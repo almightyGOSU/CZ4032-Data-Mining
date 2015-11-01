@@ -83,13 +83,11 @@ public class RemovedAttribute implements Comparable<RemovedAttribute> {
 		
 		double otherAccuracyGainLoss = other.getAccuracyGainLoss();
 		
-		/*if(otherAccuracyGainLoss > _accuracyGainLoss)
+		if(otherAccuracyGainLoss > _accuracyGainLoss)
 			return 1;
 		else if(otherAccuracyGainLoss < _accuracyGainLoss)
 			return -1;
 		else
-			return 0;*/
-		
-		return ((int) (otherAccuracyGainLoss - _accuracyGainLoss));
+			return 0;
 	}
 }

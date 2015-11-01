@@ -4,11 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import classes.RemovedAttribute;
-
 import util.Const;
 import util.FileIOHelper;
 import util.WekaHelper;
-
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Remove;
@@ -22,6 +20,8 @@ public class WekaSubsetEvaluator {
 	private static String[] _gradeMSA = null;
 	
 	private static String[][] _subsetsAttr = null;
+	
+	private static StringBuilder _sbSubsetEval = new StringBuilder();
 
 	public static void main(String[] args) {
 	
@@ -65,8 +65,8 @@ public class WekaSubsetEvaluator {
 			// Calculate baseline accuracy for binary data
 			RemovedAttribute binaryBaseline =
 					WekaHelper.calcAccuracy(binaryDataInstances);
-			System.out.println(WekaHelper.getColumnHeaders());
-			System.out.println(binaryBaseline.toString());
+			WekaHelper.printLine(_sbSubsetEval, WekaHelper.getColumnHeaders());
+			WekaHelper.printLine(_sbSubsetEval, binaryBaseline.toString());
 			
 			// Remove Top 5 Least Significant Attributes
 			String attrIndicesToRemove =
@@ -79,7 +79,7 @@ public class WekaSubsetEvaluator {
 					WekaHelper.calcAccuracy(filteredBinaryData);
 			binaryWithoutLSA.setAttributeName("Binary Top 5 LSA");
 			binaryWithoutLSA.calcAccuracyGainLoss(binaryBaseline, null);
-			System.out.println(binaryWithoutLSA.toString());
+			WekaHelper.printLine(_sbSubsetEval, binaryWithoutLSA.toString());
 			
 			// Remove Top 5 Most Significant Attributes
 			attrIndicesToRemove = findAttributeIndices(
@@ -91,7 +91,7 @@ public class WekaSubsetEvaluator {
 					WekaHelper.calcAccuracy(filteredBinaryData);
 			binaryWithoutMSA.setAttributeName("Binary Top 5 MSA");
 			binaryWithoutMSA.calcAccuracyGainLoss(binaryBaseline, null);
-			System.out.println(binaryWithoutMSA.toString());
+			WekaHelper.printLine(_sbSubsetEval, binaryWithoutMSA.toString());
 			
 			// Iterate through the different subsets
 			for(int i = 0; i < Const.NUM_SUBSETS; i++) {
@@ -110,7 +110,7 @@ public class WekaSubsetEvaluator {
 						WekaHelper.calcAccuracy(filteredBinaryData);
 				subset.setAttributeName("Binary !(Subset " + (i+1) + ")");
 				subset.calcAccuracyGainLoss(binaryBaseline, null);
-				System.out.println(subset.toString());
+				WekaHelper.printLine(_sbSubsetEval, subset.toString());
 			}
 		}
 		
@@ -128,8 +128,9 @@ public class WekaSubsetEvaluator {
 			// Calculate baseline accuracy for 5-grade data
 			RemovedAttribute gradeBaseline =
 					WekaHelper.calcAccuracy(gradeDataInstances);
-			System.out.println("\n" + WekaHelper.getColumnHeaders());
-			System.out.println(gradeBaseline.toString());
+			WekaHelper.printLine(_sbSubsetEval,
+					"\n" + WekaHelper.getColumnHeaders());
+			WekaHelper.printLine(_sbSubsetEval, gradeBaseline.toString());
 			
 			// Remove Top 5 Least Significant Attributes
 			String attrIndicesToRemove =
@@ -142,7 +143,7 @@ public class WekaSubsetEvaluator {
 					WekaHelper.calcAccuracy(filteredGradeData);
 			gradeWithoutLSA.setAttributeName("Grade Top 5 LSA");
 			gradeWithoutLSA.calcAccuracyGainLoss(gradeBaseline, null);
-			System.out.println(gradeWithoutLSA.toString());
+			WekaHelper.printLine(_sbSubsetEval, gradeWithoutLSA.toString());
 			
 			// Remove Top 5 Most Significant Attributes
 			attrIndicesToRemove = findAttributeIndices(
@@ -154,7 +155,7 @@ public class WekaSubsetEvaluator {
 					WekaHelper.calcAccuracy(filteredGradeData);
 			gradeWithoutMSA.setAttributeName("Grade Top 5 MSA");
 			gradeWithoutMSA.calcAccuracyGainLoss(gradeBaseline, null);
-			System.out.println(gradeWithoutMSA.toString());
+			WekaHelper.printLine(_sbSubsetEval, gradeWithoutMSA.toString());
 			
 			// Iterate through the different subsets
 			for(int i = 0; i < Const.NUM_SUBSETS; i++) {
@@ -173,9 +174,12 @@ public class WekaSubsetEvaluator {
 						WekaHelper.calcAccuracy(filteredGradeData);
 				subset.setAttributeName("Grade !(Subset " + (i+1) + ")");
 				subset.calcAccuracyGainLoss(gradeBaseline, null);
-				System.out.println(subset.toString());
+				WekaHelper.printLine(_sbSubsetEval, subset.toString());
 			}
 		}
+		
+		FileIOHelper.saveToFile(_sbSubsetEval.toString(),
+				Const.SUBSETS_EVAL_RESULTS_FILENAME, false);
 	}
 
 	private static String findAttributeIndices(

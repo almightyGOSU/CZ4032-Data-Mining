@@ -166,7 +166,7 @@ public class WekaAttributeEvaluator {
 		}
 		
 		FileIOHelper.saveToFile(_sbAttrEval.toString(),
-				Const.RESULTS_FILENAME, false);
+				Const.ATTR_EVAL_RESULTS_FILENAME, false);
 		FileIOHelper.saveToFile(_sbGoodBadAttr.toString(),
 				Const.GOOD_BAD_ATTR_FILENAME, false);
 	}

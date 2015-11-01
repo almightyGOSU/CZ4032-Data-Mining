@@ -1,5 +1,5 @@
 Pstatus,Medu,Mjob,Fedu,Fjob,guardian,famsize,famrel,famsup
-gender,age,traveltime,studytime,failures,activities,paidclass,internet,higher,romantic,freetime,goout,health,absences
+gender,age,traveltime,studytime,failures,activities,paid,internet,higher,romantic,freetime,goout,health,absences
 Pstatus,Medu,Mjob,Fedu,Fjob,guardian,famsize,famrel,famsup,G1,G2
-gender,age,traveltime,studytime,failures,activities,paidclass,internet,higher,romantic,freetime,goout,health,absences,G1,G2
+gender,age,traveltime,studytime,failures,activities,paid,internet,higher,romantic,freetime,goout,health,absences,G1,G2
 G1,G2

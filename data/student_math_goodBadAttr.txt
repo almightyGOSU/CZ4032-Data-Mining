@@ -1,4 +1,4 @@
-sex,health,absences,famsize,paid
-G2,G1,goout,schoolsup,internet
-guardian,schoolsup,goout,famsize,Medu
-G2,G1,Pstatus,health,romantic
+school,famsize,studytime,age,failures
+G2,G1,goout,internet,romantic
+age,traveltime,Dalc,famsize,higher
+G2,G1,nursery,romantic,reason
