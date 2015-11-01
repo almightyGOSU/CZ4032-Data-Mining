@@ -1,7 +1,6 @@
 package classes;
 
 import java.util.HashMap;
-
 import util.Const;
 
 public class RemovedAttribute implements Comparable<RemovedAttribute> {
@@ -41,13 +40,13 @@ public class RemovedAttribute implements Comparable<RemovedAttribute> {
 		return _accuracyGainLoss;
 	}
 	
-	public void calcAccuracyGainLoss(RemovedAttribute baselineAttr, int[] weights) {
+	public void calcAccuracyGainLoss(RemovedAttribute baselineAttr, double[] weights) {
 		
 		_accuracyGainLoss = 0;
 		
 		int currAttr = 0;
 		HashMap<String, Double> baselineAccuracies = baselineAttr.getAccuracies();
-		for(String technique : baselineAccuracies.keySet()) {
+		for(String technique : Const.MODELS) {
 			
 			double baselineAccuracy = baselineAccuracies.get(technique);
 			double selfAccuracy = getAccuracy(technique);

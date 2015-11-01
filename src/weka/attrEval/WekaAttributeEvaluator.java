@@ -3,7 +3,6 @@ package weka.attrEval;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import classes.RemovedAttribute;
 
@@ -40,9 +39,21 @@ public class WekaAttributeEvaluator {
 			System.out.println(
 					"Calculating baseline accuracies for binary data....");
 			_binaryBaseline = WekaHelper.calcAccuracy(binaryDataInstances);
-			int[] weights = WekaHelper.rankTechniques(_binaryBaseline);
-			WekaHelper.printLine(_sbAttrEval, "Weights for binary data: "
-					+ Arrays.toString(weights) + "\n");
+			int[] ranks = WekaHelper.rankTechniques(_binaryBaseline);
+			double[] weights = WekaHelper.rankToWeight(ranks);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("Binary Data (Technique/Rank/Weight): ");
+			for(int i = 0; i < Const.MODELS.length; i++) {
+				sb.append("(");
+				sb.append(Const.MODELS[i]).append("/");
+				sb.append(ranks[i]).append("/").append(weights[i]);
+				sb.append("), ");
+			}
+			sb.delete(sb.lastIndexOf(","), sb.length());
+			sb.append("\n");
+			
+			WekaHelper.printLine(_sbAttrEval, sb.toString());
 			
 			_binaryAttrList = new ArrayList<>();
 			WekaHelper.removeAttrAndCalc(binaryDataInstances, _binaryAttrList);
@@ -98,9 +109,21 @@ public class WekaAttributeEvaluator {
 			System.out.println(
 					"\n\nCalculating baseline accuracies for grade data....");
 			_gradeBaseline = WekaHelper.calcAccuracy(gradeDataInstances);
-			int[] weights = WekaHelper.rankTechniques(_gradeBaseline);
-			WekaHelper.printLine(_sbAttrEval, "\n\nWeights for grade data: "
-					+ Arrays.toString(weights) + "\n");
+			int[] ranks = WekaHelper.rankTechniques(_gradeBaseline);
+			double[] weights = WekaHelper.rankToWeight(ranks);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("Grade Data (Technique/Rank/Weight): ");
+			for(int i = 0; i < Const.MODELS.length; i++) {
+				sb.append("(");
+				sb.append(Const.MODELS[i]).append("/");
+				sb.append(ranks[i]).append("/").append(weights[i]);
+				sb.append("), ");
+			}
+			sb.delete(sb.lastIndexOf(","), sb.length());
+			sb.append("\n");
+			
+			WekaHelper.printLine(_sbAttrEval, sb.toString());
 			
 			_gradeAttrList = new ArrayList<>();
 			WekaHelper.removeAttrAndCalc(gradeDataInstances, _gradeAttrList);

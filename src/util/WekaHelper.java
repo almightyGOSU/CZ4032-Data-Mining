@@ -1,7 +1,6 @@
 package util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import weka.attrEval.ClassificationModels;
 import weka.classifiers.Classifier;
@@ -150,30 +149,37 @@ public class WekaHelper {
 	
 	public static int[] rankTechniques(RemovedAttribute baseline) {
 		
-		HashMap<String, Double> baselineAccuracies = baseline.getAccuracies();
-		
-		int numTechniques = baselineAccuracies.keySet().size();
+		int numTechniques = Const.MODELS.length;
 		int[] ranks = new int[numTechniques];
-		
-		ArrayList<String> techniques = new ArrayList<>();
-		techniques.addAll(baselineAccuracies.keySet());
 		
 		for(int i = 0; i < numTechniques; i++) {
 			
 			int rank = 1;
 			for(int j = 0; j < numTechniques; j++) {
 				
-				double accuracy1 = baseline.getAccuracy(techniques.get(i));
-				double accuracy2 = baseline.getAccuracy(techniques.get(j));
+				double accuracy1 = baseline.getAccuracy(Const.MODELS[i]);
+				double accuracy2 = baseline.getAccuracy(Const.MODELS[j]);
 				
 				if(accuracy1 > accuracy2)
 					rank++;
 			}
 			
-			ranks[i] = rank;
+			ranks[i] = (numTechniques - rank + 1);
 		}
 		
 		return ranks;
+	}
+	
+	public static double[] rankToWeight(int[] ranks) {
+		
+		int numTechniques = Const.MODELS.length;
+		double[] weights = new double[ranks.length];
+		
+		for(int i = 0; i < weights.length; i++) {
+			weights[i] = 1.0 + ((numTechniques - ranks[i]) * 0.1);
+		}
+		
+		return weights;
 	}
 	
 	public static String getColumnHeaders() {
