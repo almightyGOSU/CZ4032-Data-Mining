@@ -49,7 +49,7 @@ public class ClassificationModels {
 		if (_bOptimized) {
 			// Default:		Number of features is 0 (unlimited)
 			//				Maximum depth is 0 (unlimited)
-			//				Number of trees is 10
+			//				Number of trees is 100
 			// Optimized:	Number of features is 10
 			//				Maximum depth is 8
 			//				Number of trees is 200
